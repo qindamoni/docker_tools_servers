@@ -12,14 +12,23 @@ NGINX_CONF=$IMAGE_SOURCE_PATH'/nginx.conf'
 
 TMP_NGINX_CONF=$IMAGE_SOURCE_PATH'/tmp-nginx.conf'
 
+if [ -e $TMP_NGINX_CONF  ];then
+    rm $TMP_PHP_FPM_CONF
+fi
+
 cp $NGINX_CONF $TMP_NGINX_CONF
 
+PHP_IMAGE_NAME=$REGISTRY_HOST"/php-7.1.2"
 PHP_CONTAINER_ID=$(docker ps | awk -v name=$PHP_IMAGE_NAME '{if($2 == name) print $1;}')
 
 sed -i '' -e "s/%php%/${PHP_CONTAINER_ID}/" $TMP_NGINX_CONF
 
 ACCESS_LOG=$IMAGE_SOURCE_PATH'/logs/access.log'
 ERROR_LOG=$IMAGE_SOURCE_PATH'/logs/error.log'
+
+if [ ! -d $IMAGE_SOURCE_PATH'/logs' ];then
+	mkdir $IMAGE_SOURCE_PATH'/logs';
+fi
 
 touch $ACCESS_LOG
 touch $ERROR_LOG
