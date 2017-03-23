@@ -29,6 +29,14 @@ PHP_FPM_LOG=$IMAGE_SOURCE_PATH'/logs/php-fpm.log'
 PHP_ERROR_LOG=$IMAGE_SOURCE_PATH'/logs/error.log'
 PHP_SLOW_LOG=$IMAGE_SOURCE_PATH'/logs/slow.log'
 
+if [ ! -d $IMAGE_SOURCE_PATH'/logs' ];then
+	mkdir $IMAGE_SOURCE_PATH'/logs';
+fi
+
+touch $PHP_FPM_LOG
+touch $PHP_ERROR_LOG
+touch $PHP_SLOW_LOG
+
 docker run -d\
 	-v $TMP_PHP_FPM_CONF:/opt/work/php-7.1.2/etc/php-fpm.conf \
 	-v $TMP_PHP_INI:/opt/work/php-7.1.2/lib/php.ini \
